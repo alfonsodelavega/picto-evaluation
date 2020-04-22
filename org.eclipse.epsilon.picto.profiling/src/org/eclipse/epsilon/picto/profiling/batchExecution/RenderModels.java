@@ -24,7 +24,7 @@ public class RenderModels {
 		PrintStream profilingStream = new PrintStream(new File("batchResults.csv"));
 		profilingStream.println("Model,BatchTimeMillis");
 
-		int numReps = 1;
+		int numReps = 20;
 		for (int i = 0; i < numReps; i++) {
 			// render every model in the list
 			for (String modelName : models) {
