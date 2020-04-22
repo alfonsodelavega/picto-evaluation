@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BatchExecution
+Bundle-SymbolicName: org.eclipse.epsilon.picto.profiling
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.eclipse.epsilon.picto.profiling.batchExecution
+Require-Bundle: org.eclipse.epsilon.egl.engine,
+ org.eclipse.epsilon.emc.emf,
+ org.eclipse.epsilon.picto,
+ org.apache.commons.io;bundle-version="2.6.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: org.eclipse.epsilon.picto.profiling
