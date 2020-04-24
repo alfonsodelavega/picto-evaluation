@@ -1,0 +1,36 @@
+import "comps.eol";
+
+pre {
+	var components = comps::Component.all;
+}
+
+rule Comps2Barchart {
+	
+	template: "stats.egl"
+	
+	parameters: Map {
+		"components" = components
+	}
+	
+	target: "../gen/" + modelName + "/stats.html" 
+}
+
+@greedy
+rule Component2Dot 
+	transform r : comps::Component in: components {
+	
+	guard : r.components.notEmpty()
+	
+	template: "comp2dot.egl"
+	
+	target :  "../gen/" + modelName + "/" + r.getPath().concat("/") + ".dot" 
+	
+}
+
+post {
+	for (c in components) {
+		if (c.components.notEmpty()) {
+			dot2html("./gen/" + modelName + "/" + c.getPath().concat("/") + ".dot" );
+		}
+	}
+}

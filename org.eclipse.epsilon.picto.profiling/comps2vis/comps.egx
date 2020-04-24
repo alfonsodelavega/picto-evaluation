@@ -1,0 +1,32 @@
+import "comps.eol";
+
+rule Comps2Barchart {
+	
+	parameters : Map {
+		"format" = "html",
+		"path" = List{"Model", "Stats"},
+		"icon" = "barchart"
+	}
+	
+	template: "stats.egl"
+	
+}
+
+@greedy
+rule Component2Dot 
+	transform r : comps::Component {
+	
+	guard : r.components.notEmpty()
+	
+	parameters { 
+		
+		return Map {
+			"path" = r.getPath(),
+			"icon" = "diagram-ff0000",
+			"format" = "graphviz-dot"
+		};
+	}
+	template : "comp2dot.egl"
+	
+}
+
