@@ -7,10 +7,7 @@ pre {
 rule Barchart {
 	
 	parameters : Map {
-		"classes" = EClass.all, 
-		"format" = "html",
-		"path" = List{"Model", "Stats"},
-		"icon" = "barchart"
+		"classes" = EClass.all
 	}
 	
 	template: "barchart.egl"
@@ -50,10 +47,7 @@ rule ClassDiagram {
 rule Ecore23D {
 	
 	parameters : Map {
-		"classes" = EClass.all, 
-		"format" = "html",
-		"path" = List{"Model", "3D inheritance"},
-		"icon" = "diagram-fffbd7"
+		"classes" = EClass.all
 	}
 	
 	template: "3d.egl"
