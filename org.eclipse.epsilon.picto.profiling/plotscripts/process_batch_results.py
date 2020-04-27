@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-# Usage: ./batch_results.py <path_to_results.csv>
-# ./batch_results.py batchResults.csv
+# Usage: ./process_batch_results.py <path_to_results.csv>
 
 import pandas as pd
 import sys
@@ -13,9 +12,8 @@ n_std_time = "StdTimeMillis"
 processed_pattern = "{}_processed.csv"
 
 
-def process_batch_results(filename:
+def process_batch_results(filename):
     df = pd.read_csv(filename)
-    df.head()
 
     # drop max values for each model
     # TODO: decide if this is necessary / if we need something different

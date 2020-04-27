@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-# Usage: ./picto_plot.py <profiling_csv_file> <time_for_batch_processing>
-# Example: ./picto_plot.py comps.ecore.profiling.csv 600
+# Usage: ./process_picto_results.py <profiling_csv_file>
 
 import pandas as pd
 import sys
@@ -44,8 +43,6 @@ def process_picto_results (filename):
 if __name__ == "__main__":
     # The profiling file
     filename = sys.argv[1]
-    # The time it took the batch M2T transformation to complete (used in plot below)
-    # batch_time = float(sys.argv[2])
 
     # or
 
@@ -53,4 +50,4 @@ if __name__ == "__main__":
     # batch_time = 250
 
     df = process_picto_results(filename)
-    df.to_csv(processed_pattern.format(filename), index=False)
+    df.to_csv(processed_pattern.format(filename), index=True)

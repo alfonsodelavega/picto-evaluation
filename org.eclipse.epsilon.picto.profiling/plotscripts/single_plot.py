@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Usage: ./single_plot.py <processed_picto_results_file> <batch_time>
 
 import pandas as pd
 import sys
@@ -17,7 +18,9 @@ def single_plot(filename, batch_time):
 
     ax.plot((0, df[n_pos].iat[-1]), (batch_time, batch_time), "red")
     ax.plot(df[n_pos], df[n_cum_time],
-            linestyle='-', marker='o', color='b')
+            linestyle='-',
+            # marker='o',
+            color='b')
     ax.set_ylim(bottom=0)
     ax.set_xlim([0, df[n_pos].iat[-1]])
     ax.set_xlabel(n_pos)
