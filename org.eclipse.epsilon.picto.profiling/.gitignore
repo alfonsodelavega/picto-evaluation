@@ -2,3 +2,4 @@ bin
 gen
 *.csv
 *.pdf
+__pycache__

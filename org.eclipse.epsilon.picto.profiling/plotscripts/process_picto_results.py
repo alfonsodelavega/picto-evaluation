@@ -40,6 +40,7 @@ def process_picto_results (filename):
     df[n_cum_time] = df[n_views_avg].cumsum()
     return df
 
+
 if __name__ == "__main__":
     # The profiling file
     filename = sys.argv[1]
