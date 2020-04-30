@@ -3,15 +3,19 @@
 // annotation, parse the constraints into an EVL module
 //var module = getValidationModule();
 
+var hiddenFeatures = getHiddenFeatures();
+
 // Compute the set of classes to be shown in this diagram
 var main = getMainClass();
 var classes = getVisibleClasses();
 
+var visibleReferences = getVisibleReferences();
+var bidirectionalReferences = getBidirectionalReferences();
+var unidirectionalReferences = getUnidirectionalReferences();
+
 var subgraphs : Sequence;
 var unclusteredClasses : Sequence;
 unclusteredClasses.addAll(classes);
-
-var visibleReferences = getVisibleReferences();
 
 if (clusters.isDefined()) {
 	for (cluster in clusters) {
@@ -62,7 +66,7 @@ digraph G {
 			
 			[%for (other in subgraph.select(other|c.hasSameRank(other))){%]
 				[%if (isLayerActive("referenceLabels")){%]
-					[%for (r in getUnidirectionalReferences().includingAll(getBidirectionalReferences()).select(r|r.eContainer = c and r.eType = other)){%]
+					[%for (r in unidirectionalReferences.includingAll(bidirectionalReferences).select(r|r.eContainer = c and r.eType = other)){%]
 					{rank=same;[%=c.getNodeName()%];[%=other.getNodeName()%];[%=r.getNodeName()%]}
 					[%}%]
 				[%}else{%]
@@ -71,11 +75,11 @@ digraph G {
 			[%}%]
 			
 			[%if (isLayerActive("referenceLabels")){%]
-				[%for (r in getBidirectionalReferences().select(r|r.eContainer = c)){%]
+				[%for (r in bidirectionalReferences.select(r|r.eContainer = c)){%]
 				[%=r.getNodeName()%][label="[%=r.getEdgeLabel()%]/\n[%=r.eOpposite.getEdgeLabel()%]", shape=plaintext, margin=0,width=0,height=0]
 				[%}%]
 				
-				[%for (r in getUnidirectionalReferences().select(r|r.eContainer = c)){%]
+				[%for (r in unidirectionalReferences.select(r|r.eContainer = c)){%]
 				[%=r.getNodeName()%][label="[%=r.getEdgeLabel()%]", shape=plaintext, margin=0,width=0,height=0]
 				[%}%]
 			[%}%]
@@ -112,7 +116,7 @@ digraph G {
 	
 	[* ... and for its references *]
 	[%if (isLayerActive("referenceLabels")){%] [* ... if reference labels layers is active*]
-		[%for (r in getUnidirectionalReferences()) {%]
+		[%for (r in unidirectionalReferences) {%]
 			[%var c = r.eContainer;%]
 			[%if (r.containment){%]
 				[%=c.getNodeName()%]->[%=r.getNodeName()%][arrowtail=[%=r.getArrowTail()%],tooltip="[%=r.name%]",name="[%=r.getIdentifier()%]_headFragment", dir=back];
@@ -122,13 +126,13 @@ digraph G {
 				[%=r.getNodeName()%]->[%=r.eType.getNodeName()%][arrowhead=[%=r.getArrowHead()%],tooltip="[%=r.name%]",name="[%=r.getIdentifier()%]_tailFragment"];
 			[%}%]
 		[%}%]
-		[%for (r in getBidirectionalReferences()) {%]
+		[%for (r in bidirectionalReferences) {%]
 			[%var c = r.eContainer;%]
 			[%=c.getNodeName()%]->[%=r.getNodeName()%][arrowhead=[%=r.getArrowTail()%],tooltip="[%=r.name%]",name="[%=r.getIdentifier()%]", dir=back];
 			[%=r.getNodeName()%]->[%=r.eType.getNodeName()%][arrowtail=[%=r.getArrowHead()%],tooltip="[%=r.name%]",name="[%=r.getIdentifier()%]"];
 		[%}%]
 	[%}else{%] [* ... if reference labels layers is inactive*]
-		[%for (r in getUnidirectionalReferences()) {%]
+		[%for (r in unidirectionalReferences) {%]
 			[%var c = r.eContainer;%]
 			[%if (r.containment){%]
 				[%=c.getNodeName()%]->[%=r.eType.getNodeName()%][arrowtail=[%=r.getArrowTail()%],tooltip="[%=r.name%]",name="[%=r.getIdentifier()%]", dir=back];
@@ -136,7 +140,7 @@ digraph G {
 				[%=c.getNodeName()%]->[%=r.eType.getNodeName()%][arrowhead=[%=r.getArrowHead()%],tooltip="[%=r.name%]",name="[%=r.getIdentifier()%]"];
 			[%}%]
 		[%}%]
-		[%for (r in getBidirectionalReferences()) {%]
+		[%for (r in bidirectionalReferences) {%]
 			[%var c = r.eContainer;%]
 			[%=c.getNodeName()%]->[%=r.eType.getNodeName()%][arrowtail=[%=r.getArrowHead()%],arrowhead=[%=r.getArrowTail()%],tooltip="[%=r.name%]",name="[%=r.getIdentifier()%]", dir=both];
 		[%}%]
@@ -196,7 +200,7 @@ operation EClass getLabel() {
 	
 	// Remove features that shouldn't be shown
 	if (not isLayerActive("features")) features = new Sequence;
-	else features = features.excludingAll(getHiddenFeatures());
+	else features = features.excludingAll(hiddenFeatures);
 	
 	if (not isLayerActive("inlineReferences")) features = features.select(f|f.isTypeOf(EAttribute));
 	
@@ -294,7 +298,6 @@ operation Any getConstraintColour() {
 
 
 operation getVisibleClasses() {
-	var main = getMainClass();
 	if (main.isDefined()) {
 		var classes : OrderedSet;
 		classes.add(main);
@@ -308,30 +311,28 @@ operation getVisibleClasses() {
 	}
 }
 
-@cached
+
 operation getMainClass() {
 	if (mainClassName.isDefined()) {
 		return EClass.all.selectOne(c|c.name = mainClassName);
 	}
 }
 
-@cached
+
 operation getUnidirectionalReferences() {
-	var bidirectionalReferences = getBidirectionalReferences();
-	return getVisibleReferences().excludingAll(bidirectionalReferences).
+	return visibleReferences.excludingAll(bidirectionalReferences).
 		excludingAll(bidirectionalReferences.eOpposite);
 }
 
-@cached
+
 operation getBidirectionalReferences() {
-	var references = getVisibleReferences();
-	return references.select(r|r.eOpposite.isDefined() and references.indexOf(r) < references.indexOf(r.eOpposite));
+	return visibleReferences.select(r|r.eOpposite.isDefined() 
+			and visibleReferences.indexOf(r) < visibleReferences.indexOf(r.eOpposite));
 }
 
-@cached
+
 operation getVisibleReferences() { 
 	var visibleReferences : OrderedSet;
-	var main = getMainClass();
 	if (main.isDefined()){
 		visibleReferences.addAll(main.eReferences);
 		visibleReferences.addAll(main.eReferences.eOpposite);
@@ -345,12 +346,12 @@ operation getVisibleReferences() {
 	if (not isLayerActive("derived")) visibleReferences = visibleReferences.reject(r|r.isDerived);
 	
 	// Remove explicitly hidden features
-	visibleReferences = visibleReferences.excludingAll(getHiddenFeatures());
+	visibleReferences = visibleReferences.excludingAll(hiddenFeatures);
 	
 	return visibleReferences;
 }
 
-@cached
+
 operation getHiddenFeatures() {
 	var hiddenFeatures : Sequence;
 	if (hide.isDefined()) {
@@ -456,7 +457,7 @@ operation EClassifier inSameSubgraph(other : EClass) {
 }
 
 operation EClassifier hasSameRank(other : EClass) {
-	var ref = self.eReferences.reject(r|getVisibleReferences().excludes(r)).selectOne(r|(not r.containment) and r.eType=other);
+	var ref = self.eReferences.reject(r|visibleReferences.excludes(r)).selectOne(r|(not r.containment) and r.eType=other);
 	return ref.isDefined();
 }
 
