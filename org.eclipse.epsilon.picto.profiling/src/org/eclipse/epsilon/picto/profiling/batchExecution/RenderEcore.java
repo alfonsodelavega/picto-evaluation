@@ -9,7 +9,7 @@ public class RenderEcore {
 
 	public static void main(String[] args) throws Exception {
 		String modelsLocation = "models/ecore/%s";
-		String[] models = { "comps.ecore", "Ecore.ecore" };
+		String[] models = { "comps.ecore", "Ecore.ecore", "UML.ecore" };
 		String metamodel = "models/ecore/Ecore.ecore";
 		String transformationFile = "ecore2vis-standalone/ecore.egx";
 
