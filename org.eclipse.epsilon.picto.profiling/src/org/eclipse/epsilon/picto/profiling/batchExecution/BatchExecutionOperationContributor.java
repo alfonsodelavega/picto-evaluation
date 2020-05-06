@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.epsilon.egl.IEgxModule;
@@ -16,8 +17,6 @@ public class BatchExecutionOperationContributor extends OperationContributor {
 	protected IEgxModule module;
 	protected Map<String, String> cache = new HashMap<>();
 	
-	protected XmlHelper xmlHelper = new XmlHelper();
-
 	public BatchExecutionOperationContributor(IEgxModule module) {
 		this.module = module;
 	}
@@ -41,12 +40,27 @@ public class BatchExecutionOperationContributor extends OperationContributor {
 		Files.write(new File(dotFile + ".svg.html").toPath(), htmlContents.getBytes());
 	}
 
+	public void parallelDot2html(List<String> dotFiles) {
+		dotFiles.parallelStream().forEach((dotFile) -> {
+			try {
+				dot2html(dotFile);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
 	public String getImage(String path) {
 		return new File(module.getFile().getParent(), path).getAbsolutePath();
 	}
 
 	private String removeXmlDeclaration(String xml) {
 		try {
+			XmlHelper xmlHelper = new XmlHelper();
 			return xmlHelper.getXml(xmlHelper.parse(xml));
 		}
 		catch (Exception ex) {

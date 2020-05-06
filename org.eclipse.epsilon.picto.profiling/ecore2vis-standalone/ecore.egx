@@ -86,7 +86,12 @@ rule EClass2ClassDiagram
 }
 
 post {
-	for (c in classes) {
-		dot2html("./gen/" + modelName + "/classes/" + c.name + ".dot");
+	if (parallelExecution) {
+		parallelDot2html(classes.collect(c | "./gen/" + modelName + "/classes/" + c.name + ".dot"));
+	}
+	else {
+		for (c in classes) {
+			dot2html("./gen/" + modelName + "/classes/" + c.name + ".dot");
+		}
 	}
 }

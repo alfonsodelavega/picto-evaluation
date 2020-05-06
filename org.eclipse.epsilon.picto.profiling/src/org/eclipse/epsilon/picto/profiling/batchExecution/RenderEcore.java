@@ -8,15 +8,31 @@ import org.apache.commons.io.FileUtils;
 public class RenderEcore {
 
 	public static void main(String[] args) throws Exception {
+
+		// single-core run
+		runTransformation(false);
+
+		// parallel run
+		runTransformation(true);
+
+		System.out.println("Done");
+	}
+
+	public static void runTransformation(boolean parallelExecution) throws Exception {
 		String modelsLocation = "models/ecore/%s";
 		String[] models = { "comps.ecore", "Ecore.ecore", "UML.ecore" };
 		String metamodel = "models/ecore/Ecore.ecore";
 		String transformationFile = "ecore2vis-standalone/ecore.egx";
 
-		PrintStream profilingStream = new PrintStream(new File("batchRenderEcore.csv"));
+		String outputFile = "batchRenderEcore.csv";
+		if (parallelExecution) {
+			outputFile = "batchRenderEcoreParallel.csv";
+		}
+
+		PrintStream profilingStream = new PrintStream(new File(outputFile));
 		profilingStream.println("Model,BatchTimeMillis");
 
-		int numReps = 15;
+		int numReps = 5;
 		// add some initial executions that won't be measured
 		// avoids higher initial times due to low states of the cpu
 		int notMeasuredExecutions = 3;
@@ -25,7 +41,7 @@ public class RenderEcore {
 			// render every model in the list
 			for (String modelName : models) {
 				long start = System.currentTimeMillis();
-				ModelRenderer.render(modelsLocation, transformationFile, modelName, metamodel);
+				ModelRenderer.render(modelsLocation, transformationFile, modelName, metamodel, parallelExecution);
 				long end = System.currentTimeMillis();
 				if (rep >= notMeasuredExecutions) {
 					System.out.println(
@@ -37,6 +53,5 @@ public class RenderEcore {
 			FileUtils.deleteDirectory(new File("gen"));
 		}
 		profilingStream.close();
-		System.out.println("Done");
 	}
 }

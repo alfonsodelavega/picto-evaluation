@@ -8,6 +8,18 @@ import org.apache.commons.io.FileUtils;
 public class RenderGenComps {
 
 	public static void main(String[] args) throws Exception {
+
+		// single-core run
+		runTransformation(false);
+
+		// parallel run
+		runTransformation(true);
+
+		System.out.println("Done");
+	}
+
+	public static void runTransformation(boolean parallelExecution) throws Exception {
+
 		String modelsLocation = "models/gencomps/%s";
 		String[] models = {"gencomps-00.4K.model",
 				"gencomps-01.5K.model", "gencomps-03.9K.model",
@@ -15,10 +27,15 @@ public class RenderGenComps {
 		String metamodel = "models/ecore/comps.ecore";
 		String transformationFile = "comps2vis-standalone/comps.egx";
 
-		PrintStream profilingStream = new PrintStream(new File("batchRenderGenComps.csv"));
+		String outputFile = "batchRenderGenComps.csv";
+		if (parallelExecution) {
+			outputFile = "batchRenderGenCompsParallel.csv";
+		}
+
+		PrintStream profilingStream = new PrintStream(new File(outputFile));
 		profilingStream.println("Model,BatchTimeMillis");
 
-		int numReps = 15;
+		int numReps = 5;
 		// add some initial executions that won't be measured
 		// avoids higher initial times due to low states of the cpu
 		int notMeasuredExecutions = 3;
@@ -27,7 +44,7 @@ public class RenderGenComps {
 			// render every model in the list
 			for (String modelName : models) {
 				long start = System.currentTimeMillis();
-				ModelRenderer.render(modelsLocation, transformationFile, modelName, metamodel);
+				ModelRenderer.render(modelsLocation, transformationFile, modelName, metamodel, parallelExecution);
 				long end = System.currentTimeMillis();
 				if (rep >= notMeasuredExecutions) {
 					System.out.println(
@@ -39,6 +56,5 @@ public class RenderGenComps {
 			FileUtils.deleteDirectory(new File("gen"));
 		}
 		profilingStream.close();
-		System.out.println("Done");
 	}
 }

@@ -28,8 +28,19 @@ rule Component2Dot
 }
 
 post {
-	for (c in components) {
-		if (c.components.notEmpty()) {
+	/*
+	components.parallelstream()
+			.filter(c | c.components.notEmpty())
+			.forEach(comp | dot2html("./gen/" + modelName + "/" + comp.getPath().concat("/") + ".dot" ));
+	*/
+
+	if (parallelExecution) {
+		parallelDot2html(
+			components.select(c | c.components.notEmpty())
+				.collect(c | "./gen/" + modelName + "/" + c.getPath().concat("/") + ".dot"));
+	}
+	else {
+		for (c in components.select(c | c.components.notEmpty())) {
 			dot2html("./gen/" + modelName + "/" + c.getPath().concat("/") + ".dot" );
 		}
 	}

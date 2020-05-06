@@ -445,7 +445,8 @@ operation isLayerActive(id : String) {
 }
 
 operation Any getIcon() {
-	return getImage("icons/" + self.eClass.name + ".gif");
+	return new Native("java.io.File")
+		(System.context.module.file.parent, "icons/" + self.eClass.name + ".gif").absolutePath;
 }
 
 operation constraintsVisible() {
