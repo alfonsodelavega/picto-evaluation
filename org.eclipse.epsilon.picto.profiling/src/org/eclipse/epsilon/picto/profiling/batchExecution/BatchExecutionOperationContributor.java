@@ -3,9 +3,7 @@ package org.eclipse.epsilon.picto.profiling.batchExecution;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.epsilon.egl.IEgxModule;
 import org.eclipse.epsilon.eol.execute.operations.contributors.OperationContributor;
@@ -15,8 +13,7 @@ import org.eclipse.epsilon.picto.XmlHelper;
 public class BatchExecutionOperationContributor extends OperationContributor {
 
 	protected IEgxModule module;
-	protected Map<String, String> cache = new HashMap<>();
-	
+
 	public BatchExecutionOperationContributor(IEgxModule module) {
 		this.module = module;
 	}
