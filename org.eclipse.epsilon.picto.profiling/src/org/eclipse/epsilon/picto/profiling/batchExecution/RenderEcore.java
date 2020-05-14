@@ -20,7 +20,13 @@ public class RenderEcore {
 
 	public static void runTransformation(boolean parallelExecution) throws Exception {
 		String modelsLocation = "models/ecore/%s";
-		String[] models = { "comps.ecore", "Ecore.ecore", "UML.ecore" };
+		String[] models = { 
+				"Ecore.ecore",
+				"UML.ecore",
+				"CIM15.ecore", 
+				"GluemodelEmoflonTTC2017.ecore"//,
+				//				"RevEngSirius.ecore"
+		};
 		String metamodel = "models/ecore/Ecore.ecore";
 		String transformationFile = "ecore2vis-standalone/ecore.egx";
 
@@ -32,7 +38,7 @@ public class RenderEcore {
 		PrintStream profilingStream = new PrintStream(new File(outputFile));
 		profilingStream.println("Model,BatchTimeMillis");
 
-		int numReps = 5;
+		int numReps = 10;
 		// add some initial executions that won't be measured
 		// avoids higher initial times due to low states of the cpu
 		int notMeasuredExecutions = 3;

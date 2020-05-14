@@ -29,7 +29,7 @@ subgraphs.add(unclusteredClasses);
 
 %]
 digraph G {
-	graph[splines=ortho, nodesep=0.6]
+	graph[nodesep=0.6]
 	node[fontname=Tahoma, fontsize=10, shape=record]
 	edge[fontname=Tahoma, fontsize=10, arrowsize=0.7]
 	
