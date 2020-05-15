@@ -303,7 +303,7 @@ operation getVisibleClasses() {
 		classes.add(main);
 		if (isLayerActive("supertypes")) classes.addAll(main.eSuperTypes); // All its supertypes
 		if (isLayerActive("subtypes")) classes.addAll(allClasses.select(o|o.eSuperTypes.includes(main))); // All its subtypes
-		classes.addAll(getVisibleReferences().eType);
+		classes.addAll(getVisibleReferences().eType.reject(c | not c.isKindOf(EClass)));
 		return classes;
 	}
 	else {
@@ -432,6 +432,14 @@ operation EClass getNodeName() {
 
 operation EReference getNodeName() {
 	return "_" + self.eContainer.name + "_" + self.name;
+}
+
+operation EDataType getNodeName() {
+	return "_" + self.name;
+}
+
+operation EDataType getLabel() {
+	return "_" + self.name;
 }
 
 operation isLayerActive(id : String) {

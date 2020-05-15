@@ -23,9 +23,9 @@ public class RenderEcore {
 		String[] models = { 
 				"Ecore.ecore",
 				"UML.ecore",
-				"CIM15.ecore", 
-				"GluemodelEmoflonTTC2017.ecore"//,
-				//				"RevEngSirius.ecore"
+				"CIM15.ecore",
+				"GluemodelEmoflonTTC2017.ecore",
+				"RevEngSirius.ecore"
 		};
 		String metamodel = "models/ecore/Ecore.ecore";
 		String transformationFile = "ecore2vis-standalone/ecore.egx";
