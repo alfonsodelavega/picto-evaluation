@@ -302,19 +302,19 @@ operation getVisibleClasses() {
 		var classes : OrderedSet;
 		classes.add(main);
 		if (isLayerActive("supertypes")) classes.addAll(main.eSuperTypes); // All its supertypes
-		if (isLayerActive("subtypes")) classes.addAll(EClass.all.select(o|o.eSuperTypes.includes(main))); // All its subtypes
+		if (isLayerActive("subtypes")) classes.addAll(allClasses.select(o|o.eSuperTypes.includes(main))); // All its subtypes
 		classes.addAll(getVisibleReferences().eType);
 		return classes;
 	}
 	else {
-		return EClass.all.select(c|classNames.includes(c.name));
+		return allClasses.select(c|classNames.includes(c.name));
 	}
 }
 
 
 operation getMainClass() {
 	if (mainClassName.isDefined()) {
-		return EClass.all.selectOne(c|c.name = mainClassName);
+		return allClasses.selectOne(c|c.name = mainClassName);
 	}
 }
 
@@ -358,7 +358,7 @@ operation getHiddenFeatures() {
 		for (item in hide) {
 			var parts = item.split("\\.");
 			if (parts.size() == 2) {
-				var eClass = EClass.all.selectOne(c|c.name = parts.at(0));
+				var eClass = allClasses.selectOne(c|c.name = parts.at(0));
 				if (eClass.isDefined()) {
 					hiddenFeatures.addAll(eClass.eStructuralFeatures.select(sf|sf.isHidden(parts.at(0), parts.at(1))));
 				}

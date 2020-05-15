@@ -7,7 +7,7 @@ pre {
 rule Barchart {
 	
 	parameters : Map {
-		"classes" = EClass.all, 
+		"classes" = classes, 
 		"format" = "html",
 		"path" = List{"Model", "Stats"},
 		"icon" = "barchart"
@@ -46,7 +46,7 @@ rule ClassDiagram {
 rule Ecore23D {
 	
 	parameters : Map {
-		"classes" = EClass.all, 
+		"classes" = classes, 
 		"format" = "html",
 		"path" = List{"Model", "3D inheritance"},
 		"icon" = "diagram-fffbd7"
@@ -63,6 +63,7 @@ rule EClass2ClassDiagram
 		
 		return Map{
 			"mainClassName" = c.name,
+			"allClasses" = classes,
 			"classNames" = Sequence{},
 			"format" = "graphviz-dot",
 			"path" = Sequence{"Model", "Classes", c.name},

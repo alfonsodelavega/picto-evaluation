@@ -1,3 +1,11 @@
+[%
+	var class2id : Map();
+	var classIndex = 0;
+	for (c in classes) {
+		class2id.put(c, classIndex);
+		classIndex += 1;
+	}
+%]
 <head>
   <style> body { margin: 0; } </style>
 
@@ -10,8 +18,8 @@
 
   <script>
     const gData = {
-      nodes: [[%=EClass.all.collect(c|"{id:" + c.getId() + ", label:'" + c.name + "'}").concat(",")%]],
-      links: [[%=EClass.all.collect(c|c.eSuperTypes.collect(s|"{source:" + c.getId() + ", target:" + s.getId() + "}")).flatten().concat(",")%]]
+      nodes: [[%=classes.collect(c|"{id:" + class2id.get(c) + ", label:'" + c.name + "'}").concat(",")%]],
+      links: [[%=classes.collect(c|c.eSuperTypes.collect(s|"{source:" + class2id.get(c) + ", target:" + class2id.get(s) + "}")).flatten().concat(",")%]]
     };
     const Graph = ForceGraph3D()
       (document.getElementById('3d-graph'))
@@ -22,9 +30,3 @@
         });
   </script>
 </body>
-
-[%
-operation EClass getId() {
-	return EClass.all.indexOf(self);
-}
-%]

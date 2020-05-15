@@ -8,7 +8,7 @@
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Type', '#'],
-          ['Classes', [%=EClass.all.size()%]],
+          ['Classes', [%=classes.size()%]],
           ['Attributes', [%=EAttribute.all.size()%]],
           ['References', [%=EReference.all.size()%]]
         ]);

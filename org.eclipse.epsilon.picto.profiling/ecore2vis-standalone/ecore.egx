@@ -7,7 +7,7 @@ pre {
 rule Barchart {
 	
 	parameters : Map {
-		"classes" = EClass.all
+		"classes" = classes
 	}
 	
 	template: "barchart.egl"
@@ -47,7 +47,7 @@ rule ClassDiagram {
 rule Ecore23D {
 	
 	parameters : Map {
-		"classes" = EClass.all
+		"classes" = classes
 	}
 	
 	template: "3d.egl"
@@ -61,6 +61,7 @@ rule EClass2ClassDiagram
 	
 	parameters : Map {
 			"mainClassName" = c.name,
+			"allClasses" = classes,
 			"classNames" = Sequence{},
 			"format" = "graphviz-dot",
 			"path" = Sequence{"Model", "Classes", c.name},
