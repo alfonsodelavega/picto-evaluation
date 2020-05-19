@@ -1,5 +1,6 @@
 import "comps.eol";
 
+/*
 rule Comps2Barchart {
 	
 	parameters : Map {
@@ -11,6 +12,7 @@ rule Comps2Barchart {
 	template: "stats.egl"
 	
 }
+*/
 
 @greedy
 rule Component2Dot 

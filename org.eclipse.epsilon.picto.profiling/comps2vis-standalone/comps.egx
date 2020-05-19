@@ -4,6 +4,7 @@ pre {
 	var components = comps::Component.all;
 }
 
+/*
 rule Comps2Barchart {
 	
 	template: "stats.egl"
@@ -14,6 +15,7 @@ rule Comps2Barchart {
 	
 	target: "../gen/" + modelName + "/stats.html" 
 }
+*/
 
 @greedy
 rule Component2Dot 

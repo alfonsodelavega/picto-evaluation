@@ -4,6 +4,7 @@ pre {
 	var classes = EClass.all.sortBy(c|c.name);
 }
 
+/*
 rule Barchart {
 	
 	parameters : Map {
@@ -17,7 +18,7 @@ rule Barchart {
 	
 }
 
-/*
+
 rule ClassDiagram {
 	
 	parameters : Map {
@@ -41,7 +42,6 @@ rule ClassDiagram {
 	template: "classdiagram.egl"
 	
 }
-*/
 
 rule Ecore23D {
 	
@@ -55,6 +55,7 @@ rule Ecore23D {
 	template: "3d.egl"
 	
 }
+*/
 
 rule EClass2ClassDiagram 
 	transform c : EClass in: classes {
