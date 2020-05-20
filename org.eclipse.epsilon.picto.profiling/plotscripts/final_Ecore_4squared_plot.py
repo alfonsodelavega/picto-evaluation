@@ -32,7 +32,7 @@ models = ['UML.ecore', 'CIM15.ecore',
 models_title = {'Ecore.ecore' : "Ecore.ecore" ,
                 'UML.ecore' : "UML.ecore",
                 'CIM15.ecore' : "CIM.ecore",
-                'GluemodelEmoflonTTC2017.ecore' : "EmoflonTTC17.ecore",
+                'GluemodelEmoflonTTC2017.ecore' : "eMoflonTTC17.ecore",
                 "RevEngSirius.ecore" : "RevEngSirius.ecore"}
 
 
