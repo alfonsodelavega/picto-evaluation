@@ -50,7 +50,11 @@ public class RenderEcore {
 				long end = System.currentTimeMillis();
 				if (rep >= notMeasuredExecutions) {
 					System.out.println(
-							String.format("Rep %d: %s", rep - notMeasuredExecutions + 1, modelName));
+							String.format("Rep %d: %s, parallel: %b, time: %d ms",
+									rep - notMeasuredExecutions + 1,
+									modelName,
+									parallelExecution,
+									end - start));
 					profilingStream.println(String.format("%s,%d", modelName, end - start));
 				}
 			}
