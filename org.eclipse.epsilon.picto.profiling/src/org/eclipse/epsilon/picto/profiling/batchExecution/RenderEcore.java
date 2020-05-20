@@ -21,7 +21,6 @@ public class RenderEcore {
 	public static void runTransformation(boolean parallelExecution) throws Exception {
 		String modelsLocation = "models/ecore/%s";
 		String[] models = { 
-				"Ecore.ecore",
 				"UML.ecore",
 				"CIM15.ecore",
 				"GluemodelEmoflonTTC2017.ecore",
