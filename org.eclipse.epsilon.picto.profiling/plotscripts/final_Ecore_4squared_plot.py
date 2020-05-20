@@ -21,11 +21,14 @@ save_intermediate_results = True  # True: saves processed csvs
 batch_file = "../batchRenderEcore.csv"
 batch_parallel_file = "../batchRenderEcoreParallel.csv"
 models_folder = "../models/ecore/"
-models = ['Ecore.ecore' , 'UML.ecore', 'CIM15.ecore', 'GluemodelEmoflonTTC2017.ecore']
+
+models = ['UML.ecore', 'CIM15.ecore',
+          'GluemodelEmoflonTTC2017.ecore', "RevEngSirius.ecore"]
 models_title = {'Ecore.ecore' : "Ecore.ecore" ,
                 'UML.ecore' : "UML.ecore",
                 'CIM15.ecore' : "CIM.ecore",
-                'GluemodelEmoflonTTC2017.ecore' : "EmoflonTTC17.ecore"}
+                'GluemodelEmoflonTTC2017.ecore' : "EmoflonTTC17.ecore",
+                "RevEngSirius.ecore" : "RevEngSirius.ecore"}
 
 
 #%%
@@ -39,7 +42,7 @@ if save_intermediate_results:
 
 
 #%%
-plt.style.use('seaborn')
+plt.style.use('seaborn-white')
 
 plt.rc('text', usetex=True)
 plt.rc('text.latex', preamble=r'\usepackage{libertine}')
@@ -74,16 +77,19 @@ for model, ax in zip(models, [ax for axes_row in axes for ax in axes_row]):
     ax.plot((0, model_df[n_pos].iat[-1]),
             (batch_time/1000, batch_time/1000),
             linestyle=":",
+            linewidth=2,
             color="#cc3311",
-            label="singleThread")
+            label="sThread")
     ax.plot((0, model_df[n_pos].iat[-1]),
             (batch_parallel_time/1000, batch_parallel_time/1000),
             linestyle="--",
+            linewidth=2,
             color="#117733",
-            label="multiThread")
+            label="mThread")
     ax.plot(model_df[n_pos],
             model_df[n_cum_time]/1000,
             linestyle='-',
+            linewidth=2,
             color='#0077bb',
             label="Vista")
     ax.set_ylim(bottom=0)
@@ -91,10 +97,14 @@ for model, ax in zip(models, [ax for axes_row in axes for ax in axes_row]):
     ax.set_title(models_title[model])
     ax.legend()
 
-axes[0,0].set_ylabel("Accumulated time (s)")
-axes[1,0].set_ylabel("Accumulated time (s)")
-axes[1,0].set_xlabel("\# Rendered views")
-axes[1,1].set_xlabel("\# Rendered views")
+
+yTitle = "Accumulated time (s)"
+xTitle = "\# Opened views"
+
+axes[0,0].set_ylabel(yTitle)
+axes[1,0].set_ylabel(yTitle)
+axes[1,0].set_xlabel(xTitle)
+axes[1,1].set_xlabel(xTitle)
 
 #%%
 f.tight_layout()
