@@ -1,5 +1,6 @@
 bin
 gen
 *.csv
+*.txt
 *.pdf
 __pycache__
