@@ -23,7 +23,8 @@ public class RenderGenComps {
 		String modelsLocation = "models/gencomps/%s";
 		String[] models = {"gencomps-00.4K.model",
 				"gencomps-01.5K.model", "gencomps-03.9K.model",
-				"gencomps-05.8K.model", "gencomps-12.9K.model" };
+				"gencomps-05.8K.model", "gencomps-12.9K.model",
+				"gencomps-29K.model"};
 		String metamodel = "models/ecore/comps.ecore";
 		String transformationFile = "comps2vis-standalone/comps.egx";
 
