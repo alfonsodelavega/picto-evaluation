@@ -14,8 +14,7 @@ from process_batch_results import process_batch_results, processed_pattern, n_el
 from process_picto_results import process_picto_results, n_pos, n_avg_time, n_cum_time
 
 profiling_pattern = "{}.profiling.csv"
-plot_output = "../renderEcoreSquared.pdf"
-data_output = "../renderEcoreSquared-data.txt"
+
 
 save_intermediate_results = True  # True: saves processed csvs
 
@@ -23,10 +22,14 @@ if len(sys.argv) > 1:
     batch_file = sys.argv[1]
     batch_parallel_file = sys.argv[2]
     models_folder = sys.argv[3]
+    plot_output = "{}/renderEcoreSquared.pdf".format(models_folder)
+    data_output = "{}/renderEcoreSquared-data.txt".format(models_folder)
 else:
     batch_file = "../batchRenderEcore.csv"
     batch_parallel_file = "../batchRenderEcoreParallel.csv"
     models_folder = "../models/ecore/"
+    plot_output = "../renderEcoreSquared.pdf"
+    data_output = "../renderEcoreSquared-data.txt"
 
 models = ['UML.ecore', 'CIM15.ecore',
           'GluemodelEmoflonTTC2017.ecore', "RevEngSirius.ecore"]
