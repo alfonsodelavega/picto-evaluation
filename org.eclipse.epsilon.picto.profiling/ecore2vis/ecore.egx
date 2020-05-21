@@ -1,7 +1,7 @@
 pre {
 	var emfTool : new Native("org.eclipse.epsilon.emc.emf.tools.EmfTool");
 	emfTool.eCoreUtil.resolveAll(M.resource.resourceSet);
-	var classes = EClass.all.sortBy(c|c.name);
+	var classes = EClass.all.select(c | c.ePackage.name <> "ecore").sortBy(c|c.name);
 }
 
 /*
@@ -67,7 +67,7 @@ rule EClass2ClassDiagram
 			"allClasses" = classes,
 			"classNames" = Sequence{},
 			"format" = "graphviz-dot",
-			"path" = Sequence{"Model", "Classes", c.name},
+			"path" = Sequence{"Model", "Classes", classes.indexOf(c) + "-" + c.name},
 			"icon" = "diagram-fffbd7",
 			"layers" = Sequence {
 				Map {"id"="documentation", "title"="Documentation"},

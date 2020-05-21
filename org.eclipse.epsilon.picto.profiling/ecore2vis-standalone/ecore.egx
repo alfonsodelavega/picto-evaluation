@@ -1,7 +1,7 @@
 pre {
 	var emfTool : new Native("org.eclipse.epsilon.emc.emf.tools.EmfTool");
 	emfTool.eCoreUtil.resolveAll(M.resource.resourceSet);
-	var classes = EClass.all.sortBy(c|c.name);
+	var classes = EClass.all.select(c | c.ePackage.name <> "ecore").sortBy(c|c.name);
 }
 
 /*
@@ -66,7 +66,6 @@ rule EClass2ClassDiagram
 			"allClasses" = classes,
 			"classNames" = Sequence{},
 			"format" = "graphviz-dot",
-			"path" = Sequence{"Model", "Classes", c.name},
 			"icon" = "diagram-fffbd7",
 			"layers" = Sequence {
 				Map {"id"="documentation", "title"="Documentation"},
@@ -84,17 +83,19 @@ rule EClass2ClassDiagram
 	
 	template: "classdiagram.egl"
 	
-	target: "../gen/" + modelName + "/classes/" + c.name + ".dot"
+	target: "../gen/" + modelName + "/classes/" + classes.indexOf(c) + "-" + c.name + ".dot"
 	
 }
 
 post {
 	if (parallelExecution) {
-		parallelDot2html(classes.collect(c | "./gen/" + modelName + "/classes/" + c.name + ".dot"));
+		parallelDot2html(classes.collect(c | "./gen/" + modelName + "/classes/" + 
+				classes.indexOf(c) + "-" + c.name + ".dot"));
 	}
 	else {
 		for (c in classes) {
-			dot2html("./gen/" + modelName + "/classes/" + c.name + ".dot");
+			dot2html("./gen/" + modelName + "/classes/" + 
+					classes.indexOf(c) + "-" + c.name + ".dot");
 		}
 	}
 }
