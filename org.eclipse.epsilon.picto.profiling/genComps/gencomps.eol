@@ -1,0 +1,76 @@
+var root = new Component;
+var float = new Type;
+float.name = "float";
+
+var levels = 3;
+var multiplier = 8; // favours the presence of more non-leaf components (i.e. more views)
+var minChildren = 3;
+var maxChildren = 5;
+
+root.name = "C";
+root.createPorts();
+root.createChildren(levels);
+
+"Generation done".println();
+
+operation Component createChildren(levels : Integer) {
+	
+	for (i in 1.to((minChildren + multiplier * levels).to(maxChildren + multiplier * levels).random())) {
+		var child : new Component;
+		self.components.add(child);
+		child.name = self.name + loopCount;
+		child.createPorts();
+		
+		if (levels > 0) {
+			child.createChildren(levels - 1);
+		}
+	}
+	
+	//var inPorts = self.inPorts.includingAll(self.components.inPorts.flatten());
+	//var outPorts = self.outPorts.includingAll(self.components.outPorts.flatten());
+	
+	for (ip in self.inPorts) {
+		var c = new Connector;
+		self.connectors.add(c);
+		c.from = ip;
+		c.to = self.components.inPorts.flatten().select(p|p.incoming.isEmpty()).first();
+	}
+	
+	for (out in self.outPorts) {
+		var c = new Connector;
+		self.connectors.add(c);
+		c.from = self.components.outPorts.flatten().invert().select(p|p.outgoing.isEmpty()).first();
+		c.to = out;
+	}
+	
+	for (out in self.components.outPorts.flatten().select(p|p.outgoing.isEmpty())) {
+		var ins = self.components.
+			select(c|self.components.indexOf(c)>self.components.indexOf(out.eContainer())).
+			inPorts.flatten().select(p|p.incoming.isEmpty());
+			
+		if (ins.notEmpty()) {
+			var c : new Connector;
+			self.connectors.add(c);
+			c.from = out;
+			c.to = ins.random();
+		}
+		
+	}
+	
+}
+
+operation Component createPorts() {
+	for (p in 1.to(1.to(3).random())) {
+		var port : new Port;
+		port.type = float;
+		port.name = "in" + loopCount;
+		self.inPorts.add(port);	
+	}
+	
+	for (p in 1.to(1.to(3).random())) {
+		var port : new Port;
+		port.type = float;
+		port.name = "out" + loopCount;
+		self.outPorts.add(port);	
+	}
+}
