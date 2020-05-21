@@ -8,6 +8,7 @@ n_element = "Element"
 n_time = "TimeMillis"
 n_avg_time = "AvgTimeMillis"
 n_std_time = "StdTimeMillis"
+n_std_ratio = "StdTimeRatio"
 n_views_avg = "AvgAcrossviews"
 n_cum_time = "Accumulated Time (ms)"
 n_treeViewer_row = "TreeViewer"
@@ -23,6 +24,7 @@ def process_picto_results (filename):
 
     df = df.groupby([n_element])[n_time].agg(["mean", "std"]).reset_index()
     df.columns = [n_element, n_avg_time, n_std_time]
+    df[n_std_ratio] = df[n_std_time] / df[n_avg_time]
 
     # x axis position
     # The tree viewer time should be the axis 0 value

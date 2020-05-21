@@ -8,6 +8,7 @@ n_element = "Model"
 n_time = "BatchTimeMillis"
 n_avg_time = "AvgTimeMillis"
 n_std_time = "StdTimeMillis"
+n_std_ratio = "StdTimeRatio"
 
 processed_pattern = "{}_processed.csv"
 
@@ -31,6 +32,7 @@ def process_batch_results(filename):
     # Group by
     df = df.groupby([n_element])[n_time].agg(["mean", "std"]).reset_index()
     df.columns = [n_element, n_avg_time, n_std_time]
+    df[n_std_ratio] = df[n_std_time] / df[n_avg_time]
     return df
 
 
