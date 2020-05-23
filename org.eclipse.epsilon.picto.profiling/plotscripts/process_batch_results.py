@@ -6,6 +6,7 @@ import sys
 
 n_element = "Model"
 n_time = "BatchTimeMillis"
+n_count = "Count"
 n_avg_time = "AvgTimeMillis"
 n_std_time = "StdTimeMillis"
 n_std_ratio = "StdTimeRatio"
@@ -30,8 +31,8 @@ def process_batch_results(filename):
     #     df = df.append(df_models.pop())
 
     # Group by
-    df = df.groupby([n_element])[n_time].agg(["mean", "std"]).reset_index()
-    df.columns = [n_element, n_avg_time, n_std_time]
+    df = df.groupby([n_element])[n_time].agg(["mean", "std", "count"]).reset_index()
+    df.columns = [n_element, n_avg_time, n_std_time, n_count]
     df[n_std_ratio] = df[n_std_time] / df[n_avg_time]
     return df
 
