@@ -117,18 +117,22 @@ for model, ax in zip(models, [ax for ax in axes]):
             label="\picto")
     ax.set_ylim(bottom=0)
     ax.set_xlim([0, model_df[n_pos].iat[-1]])
-    ax.set_title(models_title[model])
+    ax.set_title(models_title[model], y=1.01)
+    ax.tick_params(axis=u'both', which=u'both',length=5)
 
 # stacked axis titles
 yTitle = "Accumulated time (s)"
-xTitle = "\# Opened views"
+xTitle = "\# Accessed views"
 
 axes[0].set_ylabel(yTitle)
 axes[0].set_xlabel(xTitle)
 axes[1].set_xlabel(xTitle)
 
 # axis ticks fixes
-
+axes[0].set_xticks(range(0,1201,400))
+axes[0].set_yticks(range(0,51,10))
+axes[1].set_xticks(range(0,6001,2000))
+axes[1].set_yticks(range(0,201,50))
 
 # bottom legend
 handles, labels = axes[1].get_legend_handles_labels()
