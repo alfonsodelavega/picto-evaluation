@@ -34,7 +34,7 @@ Some Python scripts are provided to generate the graph figures of the paper. The
 - `numpy`
 - `matplotlib`
 
-The authors used an [Anaconda 3]() installation, which by default contains the enumerated packages.
+The authors used an [Anaconda 3](https://www.anaconda.com/products/individual) installation, which by default contains the enumerated packages.
 
 In addition, the plot scripts use Latex fonts for a better alignment with the manuscript style. So, a **Latex installation** is also required, with the `libertine` package installed.
 
