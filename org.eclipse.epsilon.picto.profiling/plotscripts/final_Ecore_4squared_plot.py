@@ -58,7 +58,7 @@ plt.style.use('seaborn-white')
 
 plt.rc('text', usetex=True)
 plt.rc('text.latex',
-       preamble=r'\usepackage{libertine} \newcommand{\picto}{\textsc{Vista}}')
+       preamble=r'\usepackage{libertine} \newcommand{\picto}{\textsc{Picto}}')
 plt.rc("font", family="serif")
 
 SMALL_SIZE = 18
