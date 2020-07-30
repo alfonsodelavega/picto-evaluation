@@ -12,7 +12,7 @@ This repository contains the required artefacts for replicating the evaluation p
 The following programs are required:
 
 - Java JDK 8
-- A [Graphviz](https://www.graphviz.org/download/) installation, as the generated views are represented in the dot format.
+- A [Graphviz](https://www.graphviz.org/download/) installation, as the generated views are represented in the dot format. On Windows, it might be necessary to add the `dot.exe` to the environment variables of the system. On Mac and Linux, the `dot` command is called from its typical installation location, e.g., `/usr/local/bin/dot` and `/usr/bin/dot` respectively.
 
 ### Eclipse
 
