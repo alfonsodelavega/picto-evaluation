@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.PrintStream;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.epsilon.profiling.Stopwatch;
 
 public class RenderGenComps {
 
@@ -46,17 +47,18 @@ public class RenderGenComps {
 		for (int rep = 0; rep < numReps; rep++) {
 			// render every model in the list
 			for (String modelName : models) {
-				long start = System.currentTimeMillis();
+				Stopwatch sw = new Stopwatch();
+				sw.resume();
 				ModelRenderer.render(modelsLocation, transformationFile, modelName, metamodel, parallelExecution);
-				long end = System.currentTimeMillis();
+				sw.pause();
 				if (rep >= notMeasuredExecutions) {
 					System.out.println(
 							String.format("Rep %d: %s, parallel: %b, time: %d ms",
 									rep - notMeasuredExecutions + 1,
 									modelName,
 									parallelExecution,
-									end - start));
-					profilingStream.println(String.format("%s,%d", modelName, end - start));
+									sw.getElapsed()));
+					profilingStream.println(String.format("%s,%d", modelName, sw.getElapsed()));
 				}
 			}
 			// then, delete the output directory for a fresh next generation
