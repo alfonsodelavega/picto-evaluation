@@ -1,19 +1,26 @@
 #!/usr/bin/env python
 # Usage: ./process_picto_results.py <profiling_csv_file>
 
+import numpy as np
 import pandas as pd
 import sys
+
 
 n_element = "Element"
 n_time = "TimeMillis"
 n_count = "Count"
-n_avg_time = "AvgTimeMillis"
-n_std_time = "StdTimeMillis"
-n_std_ratio = "StdTimeRatio"
-n_views_avg = "AvgAcrossviews"
-n_cum_time = "Accumulated Time (ms)"
+
+views_avg = "views_avg"
+n_std_time = "views_std"
+n_std_ratio = "views_std_ratio"
+
+n_tree_viewer_avg = "treeviewer_avg"
+n_singleview_avg = "single_view_avg"
+
+
 n_treeViewer_row = "TreeViewer"
-n_pos = "# Rendered Views"
+
+n_numviews = "num_views"
 
 processed_pattern = "{}_processed.csv"
 
@@ -21,37 +28,48 @@ processed_pattern = "{}_processed.csv"
 def process_picto_results (filename):
     df = pd.read_csv(filename)
 
-    #TODO: Decide if it is necessary to remove best/worst obtained time
+    accum = 0
+    views_computation = []
+    treeviewer_computation = []
+    num_views = 0
+    for _, row in df.iterrows():
+        if row[n_element] == n_treeViewer_row:
+            treeviewer_computation.append(row[n_time])
+            if accum != 0:
+                views_computation.append(accum)
+                accum = 0
+                num_views = 0
+        else:
+            num_views += 1
+        accum += row[n_time]
 
-    df = df.groupby([n_element])[n_time].agg(["mean", "std", "count"]).reset_index()
-    df.columns = [n_element, n_avg_time, n_std_time, n_count]
-    df[n_std_ratio] = df[n_std_time] / df[n_avg_time]
+    views_computation.append(accum) # last one
 
-    # x axis position
-    # The tree viewer time should be the axis 0 value
-    # (not sure about the order of the others, alphanumeric atm)
-    #TODO: decide order of rendered views
-    df[n_pos] = df.index + 1
-    df.set_index(n_element, inplace=True)
-    df.at[n_treeViewer_row, n_pos] = 0
-    df.sort_values(by=[n_pos], inplace=True)
 
-    # Average view rendering times to get a uniform graph
-    df[n_views_avg] = df[n_avg_time].mean()
+    tree_viewer_avg = np.average(treeviewer_computation)
+    views_avg = np.average(views_computation)
+    views_std = np.std(views_computation)
+    views_stdratio = views_std / views_avg
+    single_view_avg = views_avg / num_views
 
-    # Get accumulated times as new views are rendered
-    df[n_cum_time] = df[n_views_avg].cumsum()
-    return df
+    result = [{ "treeviewer_avg" : tree_viewer_avg,
+                "views_avg" : views_avg,
+                "views_std" : views_std,
+                "views_std_ratio" : views_stdratio,
+                "num_views" : num_views,
+                "single_view_avg" : single_view_avg}]
+    result_df = pd.DataFrame.from_records(result)
+
+    return result_df
 
 
 if __name__ == "__main__":
     # The profiling file
-    filename = sys.argv[1]
+    # filename = sys.argv[1]
 
     # or
 
-    # filename = "../models/comps.ecore.profiling.csv"
-    # batch_time = 250
+    filename = "/home/fonso/Sync/papers/2023-pictoJournal/2023-picto-vm10700/RevEngSirius.ecore.profiling.csv"
 
     df = process_picto_results(filename)
-    df.to_csv(processed_pattern.format(filename), index=True)
+    df.to_csv(processed_pattern.format(filename), index=False)

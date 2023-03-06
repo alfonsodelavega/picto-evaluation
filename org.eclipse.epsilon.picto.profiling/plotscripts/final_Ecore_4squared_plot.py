@@ -10,8 +10,8 @@ import pandas as pd
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
-from process_batch_results import process_batch_results, processed_pattern, n_element
-from process_picto_results import process_picto_results, n_pos, n_avg_time, n_cum_time
+from process_batch_results import process_batch_results, processed_pattern, n_element, n_avg_time
+from process_picto_results import process_picto_results, n_numviews, views_avg, n_tree_viewer_avg
 
 profiling_pattern = "{}.profiling.csv"
 
@@ -88,36 +88,40 @@ for model, ax in zip(models, [ax for axes_row in axes for ax in axes_row]):
     # convert to seconds
     batch_time = batch_time / 1000
     batch_parallel_time = batch_parallel_time / 1000
-    model_df[n_cum_time] = model_df[n_cum_time] / 1000
+
+    model_df[views_avg] = model_df[views_avg] / 1000
+    model_df[n_tree_viewer_avg] = model_df[n_tree_viewer_avg] / 1000
 
     # save this for later
     model2single[model] = batch_time
     model2parallel[model] = batch_parallel_time
-    model2pictoresults[model] = model_df
+
+    model_values = model_df.iloc[0]
+    model2pictoresults[model] = model_values
 
     if save_intermediate_results:
         model_df.to_csv(processed_pattern.format(model_path), index=True)
 
-    ax.plot((0, model_df[n_pos].iat[-1]),
+    ax.plot((0, model_values[n_numviews]),
             (batch_time, batch_time),
             linestyle=":",
             linewidth=2,
             color="#cc3311",
             label="single-thread")
-    ax.plot((0, model_df[n_pos].iat[-1]),
+    ax.plot((0, model_values[n_numviews]),
             (batch_parallel_time, batch_parallel_time),
             linestyle="--",
             linewidth=2,
             color="#117733",
             label="multi-thread")
-    ax.plot(model_df[n_pos],
-            model_df[n_cum_time],
+    ax.plot((0, model_values[n_numviews]),
+            (model_values[n_tree_viewer_avg], model_values[views_avg]),
             linestyle='-',
             linewidth=2,
             color='#0077bb',
             label="\picto")
     ax.set_ylim(bottom=0)
-    ax.set_xlim([0, model_df[n_pos].iat[-1]])
+    ax.set_xlim([0, model_values[n_numviews]])
     ax.set_title(models_title[model], y=1.01)
     ax.tick_params(axis=u'both', which=u'both',length=5)
 
@@ -132,18 +136,18 @@ axes[1,1].set_xlabel(xTitle)
 
 # axis ticks fixes
 axes[0,0].set_xticks(range(0,241,80))
-axes[0,0].set_yticks(range(0,9,2))
-axes[0,1].set_yticks(range(0,26,5))
+axes[0,0].set_yticks(range(0,7,2))
+axes[0,1].set_yticks(range(0,21,5))
 axes[1,0].set_xticks(range(0,1001,250))
-axes[1,0].set_yticks(range(0,41,10))
+axes[1,0].set_yticks(range(0,36,5))
 axes[1,1].set_xticks(range(0,5001,1250))
-axes[1,1].set_yticks(range(0,151,25))
+axes[1,1].set_yticks(range(0,126,25))
 
 
 # bottom legend
 handles, labels = axes[1,1].get_legend_handles_labels()
 f.legend(handles, labels, frameon=False, ncol=3,
-         loc='lower center', bbox_to_anchor=(0.5,-0.02))
+         loc='lower center', bbox_to_anchor=(0.5,-0.04))
 
 #%%
 f.tight_layout()
@@ -183,15 +187,15 @@ for model in models:
     printb(model, f)
     single = model2single[model]
     multi = model2parallel[model]
-    picto_df = model2pictoresults[model]
+    picto_values = model2pictoresults[model]
 
     # Total number of views
-    num_views = picto_df[n_pos].iat[-1]
+    num_views = picto_values[n_numviews]
     printb("\tTotal number of views: {}".format(num_views), f)
     printb("", f)
 
     # Final time for each solution
-    picto_total_time = picto_df[n_cum_time].iat[-1]
+    picto_total_time = picto_values[views_avg]
     printb("\tSingle-thread time: {}".format(single), f)
     printb("\tMulti-thread time: {}".format(multi), f)
     printb("\tPicto total time: {}".format(picto_total_time), f)
@@ -208,7 +212,7 @@ for model in models:
     printb("", f)
 
     # crossings
-    picto_line = [[0, picto_df[n_cum_time].iat[0]],
+    picto_line = [[0, picto_values[n_tree_viewer_avg]],
                   [num_views, picto_total_time]]
     single_line = [[0, single], [num_views, single]]
     multi_line = [[0, multi], [num_views, multi]]
