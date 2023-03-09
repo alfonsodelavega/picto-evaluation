@@ -1,26 +1,26 @@
-# models2020-picto-data
+# Picto performance evaluation
 
-This repository contains the required artefacts for replicating the evaluation performed in the MODELS 2020 Picto paper, titled *Efficient Generation of Graphical Model Views via Lazy Model-to-Text Transformation*. This evaluation compares two transformation approaches for generating HTML model views, namely:
+This repository contains the required artefacts for replicating the performance evaluation used to validate the lazy evaluation capabilities provided by the Picto tool. This evaluation compares two transformation approaches for generating HTML model views, namely:
 
 - A batch model-to-text (M2T) transformation generation with general purpose methods (EGL).
 - A lazy generation of model views through the use of the Picto plugin.
 
-**Note**: the results shown in the paper were obtained in two different devices (a laptop and a PC) running under Linux Ubuntu. We experimented some problems when running the profiling programs in a Windows installation, so we recommend to anyone willing to re-run the programs to use and OS X or Linux-powered system.
+The evaluation has been tested in a Ubuntu 18.04 machine running dot version 2.40.1.
 
 ## Installation / Configuration
 
 The following programs are required:
 
-- Java JDK 8
+- Java JDK 11
 - A [Graphviz](https://www.graphviz.org/download/) installation, as the generated views are represented in the dot format. On Windows, it might be necessary to add the `dot.exe` to the environment variables of the system. On Mac and Linux, the `dot` command is called from its typical installation location, e.g., `/usr/local/bin/dot` and `/usr/bin/dot` respectively.
 
 ### Eclipse
 
-The tests require an Eclipse 2020 installation with support for setting a [target platform](https://www.vogella.com/tutorials/EclipseTargetPlatform/article.html). You can get such an eclipse installation by using Epsilon's own [eclipse installer](https://www.eclipse.org/epsilon/download/).
+The tests have been carried out using an Eclipse 2021-12 installation with support for setting a [target platform](https://www.vogella.com/tutorials/EclipseTargetPlatform/article.html). You can get such an eclipse installation by using Epsilon's own [eclipse installer](https://www.eclipse.org/epsilon/download/).
 
 The tests use a modified version of the Epsilon model management suite source projects, including some special modifications for the profiling of Picto views generation. The next steps allow obtaining this environment and importing all the profiling projects:
 
-1. Checkout into your system the following git repository: https://github.com/kolovos/models2020-picto-profiling
+1. Checkout into your system the following git repository: https://doi.org/10.5281/zenodo.7712752
 2. In an Eclipse workspace, import all projects under the `plugins` and `releng` folders of the previous repository.
 3. There is an [Eclipse Target Platform](https://www.vogella.com/tutorials/EclipseTargetPlatform/article.html) at `org.eclipse.epsilon.target/org.eclipse.epsilon.target.target`. Load this target platform by opening it and clicking on *Set as Active Target Platform*.
 4. Run a *second* Eclipse instance from this initial workspace. To do that, right-click on any of the imported Eclipse projects, and select *Run as > Eclipse Application*.
@@ -71,7 +71,7 @@ Before running these tests, we recommend to close all editors of the Eclipse ins
 
 Once the standalone M2T transformation and all individual picto rendering measurements have been taken, different scripts from the `plotscripts` folder can be ran to obtain plots. We detail the required steps to create the two plots shown in the paper. The execution of the python scripts might vary depending on your system. We provide instructions to run these scripts from a terminal and from the `plotscripts` folder.
 
-### Ecore models (Figure 14)
+### Ecore models
 
 From `org.eclipse.epsilon.picto.profiling/plotscripts`, run:
 
@@ -79,10 +79,10 @@ From `org.eclipse.epsilon.picto.profiling/plotscripts`, run:
 
 The `renderEcoreSquared.pdf` file would be generated in the root of the `org.eclipse.epsilon.picto.profiling` eclipse project, as well as a `renderEcoreSquared-data.txt` data with relevant information that was used when comparing and discussing the approaches in the paper.
 
-### GenComps models (Figure 15)
+### GenComps models
 
 From `org.eclipse.epsilon.picto.profiling/plotscripts`, run:
 
-`python final_gencomps_2models_plot.py`
+`python final_gencomps_4squared_plot.py`
 
-The `renderGenComps2Models.pdf` file would be generated in the root of the eclipse project, as well as a `renderGenComps2Models-data.txt` data with relevant information that was used when comparing and discussing the approaches in the paper.
+The `renderGenCompsSquared.pdf` file would be generated in the root of the eclipse project, as well as a `renderGenCompsSquared-data.txt` data with relevant information that was used when comparing and discussing the approaches in the paper.
